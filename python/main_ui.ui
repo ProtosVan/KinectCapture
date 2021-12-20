@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>KinectCapture</class>
+ <widget class="QMainWindow" name="KinectCapture">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1300</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Kinect Capture by Van</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGraphicsView" name="KinectGraph">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>5</y>
+      <width>1280</width>
+      <height>720</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="StartCollect">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>820</y>
+      <width>211</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>开始采集</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="ResolutionBox">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>740</y>
+      <width>201</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <item>
+     <property name="text">
+      <string>分辨率</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>3072P(4096*3072)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>2160P(3840*2160)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1536P(2048*1536)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1440P(2560*1440)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>1080P(1920*1080)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>720P(1280*720)</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="FPSBox">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>740</y>
+      <width>151</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <item>
+     <property name="text">
+      <string>帧数</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>30FPS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>15FPS</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>5FPS</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="StartKinect">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>740</y>
+      <width>151</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>启动Kinect</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="NoticeNoChange">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>880</y>
+      <width>531</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>注意：一旦启动后无法更改！</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="FilePath">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>790</y>
+      <width>191</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="ChoosePath">
+    <property name="geometry">
+     <rect>
+      <x>960</x>
+      <y>790</y>
+      <width>112</width>
+      <height>34</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>选择路径</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CaptureTime">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>850</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="CapturedPicsNum">
+    <property name="geometry">
+     <rect>
+      <x>970</x>
+      <y>880</y>
+      <width>81</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
