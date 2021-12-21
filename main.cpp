@@ -22,11 +22,13 @@
 
 DWORD WINAPI InstanceThread(LPVOID);
 VOID GetAnswerToRequest(LPTSTR, LPTSTR, LPDWORD);
+bool ExitCode = false;
 
 k4a_device_t device = NULL;
 
 int _tmain(int argc, char* argv[])
 {
+    printf("%s, %s", argv[1], argv[2]);
     // Open Eden camera
     const int32_t TIMEOUT_IN_MS = 1000;
 
@@ -79,6 +81,7 @@ int _tmain(int argc, char* argv[])
 
     for (;;)
     {
+        
         _tprintf(TEXT("\nPipe Server: Main thread awaiting client connection on %s\n"), lpszPipename);
         hPipe = CreateNamedPipe(lpszPipename,               // pipe name
             PIPE_ACCESS_DUPLEX,         // read/write access
@@ -114,14 +117,24 @@ int _tmain(int argc, char* argv[])
                 (LPVOID)hPipe,  // thread parameter
                 0,              // not suspended
                 &dwThreadId);   // returns thread ID
-
             if (hThread == NULL)
             {
                 _tprintf(TEXT("CreateThread failed, GLE=%d.\n"), GetLastError());
                 return -1;
             }
-            else
-                CloseHandle(hThread);
+            else {
+                int i = 0;
+
+                while (i == 0 or i == 259) {
+                    GetExitCodeThread(hThread, (LPDWORD)&i);
+                }
+                printf("%d\n", i);
+                if (i == -1) {
+                    ExitCode = true;
+                    CloseHandle(hThread);
+                    break;
+                }
+            }
         }
         else
             // The client could not connect, so close the pipe.
@@ -132,6 +145,7 @@ int _tmain(int argc, char* argv[])
     {
         k4a_device_close(device);
     }
+    printf("Successfully closed Kinect. Exiting...\n");
 
     return 0;
 }
@@ -218,6 +232,19 @@ DWORD WINAPI InstanceThread(LPVOID lpvParam)
         }
 
         // Process the incoming message.
+        if (*pchRequest == 'X') {
+            printf("Get Exit Code X, exiting...\n");
+            FlushFileBuffers(hPipe);
+            DisconnectNamedPipe(hPipe);
+            CloseHandle(hPipe);
+
+            HeapFree(hHeap, 0, pchRequest);
+            HeapFree(hHeap, 0, pchReply);
+
+            printf("InstanceThread exitting.\n");
+            return -1;
+        }
+
         GetAnswerToRequest(pchRequest, pchReply, &cbReplyBytes);
 
         // Write the reply to the pipe.
@@ -247,6 +274,7 @@ DWORD WINAPI InstanceThread(LPVOID lpvParam)
 
     printf("InstanceThread exitting.\n");
     return 1;
+    
 }
 
 VOID GetAnswerToRequest(LPTSTR pchRequest,
