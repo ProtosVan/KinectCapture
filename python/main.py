@@ -33,26 +33,63 @@ class MainWindowClass(QMainWindow, main_ui.Ui_KinectCapture):
 
         self.StartCollect.setEnabled(False)
         self.StartKinect.setEnabled(False)
+        self.StopKinect.setEnabled(False)
+        self.StartCollect.setEnabled(False)
+        self.StopCollect.setEnabled(False)
 
         self.StartKinect.clicked.connect(self.actionStartKinect)
         self.StopKinect.clicked.connect(self.actionStopKinect)
         self.kinectThread = threading.Thread(target=openKinect, args=(self.resolutionval, self.fpsval))
-        
-    
+        self.ChoosePath.clicked.connect(self.actionChoosePath)
+        self.StartCollect.clicked.connect(self.actionStartCollect)
+        self.StopCollect.clicked.connect(self.actionStopCollect)
+        self.CaptureStartTime = 0
+        self.CapturedAmount = 0
+        self.dir_path = ""
+
+    def actionStartCollect(self):
+        self.flag_start_capture = True
+        self.CaptureStartTime = time.time()
+        self.CapturedAmount = 0
+        self.StartKinect.setEnabled(False)
+        self.StopKinect.setEnabled(False)
+        self.StopCollect.setEnabled(True)
+        pass
+
+    def actionStopCollect(self):
+        self.flag_start_capture = False
+        self.StopKinect.setEnabled(True)
+        pass
+
+    def actionChoosePath(self):
+        self.dir_path=QFileDialog.getExistingDirectory(self,"Choose directory")
+        if len(self.dir_path) == 0:
+            pass
+        else:
+            self.PathLabel.setText(self.dir_path)
+            if self.flag_start_kinect:
+                self.StartCollect.setEnabled(True)
+        pass
+
     def actionStartKinect(self):
+        
         if self.flag_start_kinect:
             pass
         else:
             self.flag_start_kinect = True
             self.kinectThread.start()
             print("Wait for thread to begin...")
-            time.sleep(5)
+            self.StartKinect.setEnabled(False)
+            time.sleep(3)
             print("Suppose that Kinect is opened...")
             self.filehandle = win32file.CreateFile("\\\\.\\pipe\\mynamedpipe",
         win32file.GENERIC_READ | win32file.GENERIC_WRITE,
         0, None,
         win32file.OPEN_EXISTING,
         0, None)
+            self.StopKinect.setEnabled(True)
+            if len(self.dir_path) != 0:
+                self.StartCollect.setEnabled(True)
             while(self.flag_start_kinect):
                 request_msg = "Request color image"
                 win32file.WriteFile(self.filehandle, request_msg.encode())
@@ -64,13 +101,22 @@ class MainWindowClass(QMainWindow, main_ui.Ui_KinectCapture):
                 qt_color_img_full = QImage(color_img_full_trans.data, 1280, 720, QImage.Format_RGB888)
                 self.ShowFigure.setPixmap(QPixmap.fromImage(qt_color_img_full))
                 QApplication.processEvents()
+                if self.flag_start_capture:
+                    self.CapturedAmount += 1
+                    self.CapturedPicsNum.setText("Nums: %d"%(self.CapturedAmount))
+                    self.CaptureTime.setText("Time: %ds"%(time.time() - self.CaptureStartTime))
+                    cv2.imwrite(self.dir_path+'/'+str(time.time())+".png", color_img_full)
+                else:
+                    pass
     
     def actionStopKinect(self):
         self.flag_start_kinect = False
         request_msg = "X"
         win32file.WriteFile(self.filehandle, request_msg.encode())
         self.kinectThread = threading.Thread(target=openKinect, args=(self.resolutionval, self.fpsval))
-
+        self.StopKinect.setEnabled(False)
+        if self.fpsval != 0 and self.resolutionval != 0:
+            self.StartKinect.setEnabled(True)
 
 
     def actionFPSChange(self, i):
